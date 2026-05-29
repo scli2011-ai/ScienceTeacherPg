@@ -1,5 +1,6 @@
 # components/chat.py
 import streamlit as st
+import re
 from google.genai import types
 from config import FACILITATOR_INSTRUCTION, ASSESSMENT_INSTRUCTION
 from database import search_documents, log_study_interaction
@@ -44,35 +45,75 @@ def render_chat(supabase, gemini_client, chat_model_name, embedding_model_name):
         st.session_state.last_voice_prompt = ""
     if "text_input_box" not in st.session_state:
         st.session_state.text_input_box = ""
+    if "current_url" not in st.session_state:
+        st.session_state.current_url = None
 
+    # --- 1. SIDEBAR: Voice Input & Webpage Viewer ---
+    with st.sidebar:
+        supported_languages = {
+            "Cantonese (廣東話)": "yue-Hant-HK",
+            "English": "en",
+            "Mandarin (普通話)": "zh-CN",
+            "Spanish": "es-ES"
+        }
+        
+        st.markdown("### ⚙️ Voice Input Settings")
+        selected_lang_name = st.selectbox(
+            "Select your preferred language:",
+            list(supported_languages.keys()),
+            index=0
+        )
+        selected_lang_code = supported_languages[selected_lang_name]
+
+        st.markdown("---")
+        
+        # Webpage Viewer in Sidebar
+        st.subheader("🖥️ Webpage Viewer")
+        if st.session_state.current_url:
+            # Render the webpage in an iframe inside the sidebar
+            st.iframe(st.session_state.current_url, height=500)
+            if st.button("Clear Viewer"):
+                st.session_state.current_url = None
+                st.rerun()
+        else:
+            # Placeholder when no link has been shared yet
+            st.info("Visuals and videos will appear here when you click an 'Open in Sidebar' button!")
+    
+    # --- HEADER ---
     if st.session_state.active_bot == "facilitator":
         st.subheader("👨‍🏫 I am Einstein Junior, your science teacher!")
     else:
         st.subheader("📝 I am the Assessment Bot!")
-        
-    # --- 1. Voice Input Language Selector (Moved to Sidebar) ---
-    supported_languages = {
-        "Cantonese (廣東話)": "yue-Hant-HK",
-        "English": "en",
-        "Mandarin (普通話)": "zh-CN",
-        "Spanish": "es-ES"
-    }
-    
-    st.sidebar.markdown("### ⚙️ Voice Input Settings")
-    selected_lang_name = st.sidebar.selectbox(
-        "Select your preferred language:",
-        list(supported_languages.keys()),
-        index=0
-    )
-    selected_lang_code = supported_languages[selected_lang_name]
-    
+
+    # ==========================================
+    # CHAT INTERFACE (Main Area)
+    # ==========================================
     # --- 2. Scrollable Chat Container ---
-    chat_container = st.container(height=500)
+    chat_container = st.container(height=600)
     
     with chat_container:
-        for message in st.session_state.messages:
+        for i, message in enumerate(st.session_state.messages):
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
+                
+                # If the assistant posted a link, provide a button to open it in the sidebar
+                if message["role"] == "assistant":
+                    urls = re.findall(r'(https?://[^\s\)]+)', message["content"])
+                    # Deduplicate URLs
+                    urls = list(dict.fromkeys(urls))
+                    if urls:
+                        for j, raw_url in enumerate(urls):
+                            if st.button(f"📺 Open in Sidebar: {raw_url[:30]}...", key=f"btn_open_sidebar_{i}_{j}"):
+                                embed_url = raw_url
+                                # Convert YouTube Shorts to embed format
+                                if "youtube.com/shorts/" in raw_url:
+                                    embed_url = raw_url.replace("youtube.com/shorts/", "youtube.com/embed/")
+                                # Convert Google Drive view links to preview format
+                                elif "drive.google.com/file/d/" in raw_url:
+                                    embed_url = raw_url.replace("/view?usp=sharing", "/preview").replace("/view", "/preview")
+                                
+                                st.session_state.current_url = embed_url
+                                st.rerun()
 
     # --- 3. Custom Input Row (Locked below the chat) ---
     input_container = st.container()
@@ -190,6 +231,11 @@ def render_chat(supabase, gemini_client, chat_model_name, embedding_model_name):
                     else:
                         message_placeholder.markdown(full_response)
                         st.session_state.messages.append({"role": "assistant", "content": full_response})
+                        
+                        # Trigger a rerun so any new links generate their "Open in Sidebar" buttons immediately
+                        urls = re.findall(r'(https?://[^\s\)]+)', full_response)
+                        if urls:
+                            st.rerun()
                     
                     log_study_interaction(supabase, st.session_state.user.id, prompt, full_response)
                     
