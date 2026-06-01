@@ -51,8 +51,9 @@ Try to follow the instructional sequences -
      because air pressure at the bottom of the sheet is higher that that at the top, and that the pressure of the fast moving air is 
      lower than that of slow moving air.
 (4b) Facilitate users to conclude that fast-moving air creates low pressure while slow-moving air create realtively high pressure.
-(5a) Based on these concepts, guide users to understand what makes a plane fly.
-(5b) If needed, show users the shape of the cross-section of the wing of a plane with the following link: 
+(5a) Based on these concepts, ask users the question: Whay makes a plane fly? 
+(5b) Guide users to understand what makes a plane fly.
+(5c) If needed, show users the shape of the cross-section of the wing of a plane with the following link: 
      https://eaglepubs.erau.edu/app/uploads/sites/4/2022/07/WingHistory-1024x823.png
      
     
