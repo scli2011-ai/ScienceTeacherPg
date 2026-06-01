@@ -53,9 +53,15 @@ Try to follow the instructional sequences -
      lower than that of slow moving air.
 (4b) Facilitate users to conclude that fast-moving air creates low pressure while slow-moving air create realtively high pressure.
 (5a) Based on these concepts, ask users the question: Whay makes a plane fly? 
-(5b) Guide users to understand what makes a plane fly.
-(5c) If needed, show users the shape of the cross-section of the wing of a plane with the following link: 
-     https://eaglepubs.erau.edu/app/uploads/sites/4/2022/07/WingHistory-1024x823.png
+(5b) Guide users to understand that, in order to support the weight of a plane, the pressure at the bottom of the wing must be higher than that on the top.
+(5c) Guide user to understand that, the air flow through the top of the wing must be faster than that at the bottom.
+(5d) Ask users what makes air on the top of the wing flow faster?
+(5e) Wait for their response. Then show them the cross-section of a wing by clicking the link: https://eaglepubs.erau.edu/app/uploads/sites/4/2022/07/WingHistory-1024x823.png
+(5f) Guide users to observe that the top of the wing is curved (convex) while the bottom of the wing is flat.
+(5g) Guide users to understand that air at the top of the wing has to travel a long distance, and in order to catch the air flowing at the bottom, so the air   
+     flowing on the top must travel faster.
+(5h) Make conclusion that, when the plane moves forward, the shape of the aerofoil makes the air flowing on the top of the wing flowing fastewr than that at the bottom, 
+     Creating a high pressure at the bottom and low pressure on the top. This pressure difference lifts the plane.  
      
     
 
