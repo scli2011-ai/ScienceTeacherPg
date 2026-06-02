@@ -30,8 +30,7 @@ def get_valid_gemini_model(_client):
     for pref in PREFERRED_CHAT_MODELS:
         if pref in available_models:
             selected_model_name = pref
-            break
-    print(f"Auto-selected chat model: {selected_model_name}")        
+            break      
     return selected_model_name
 
 @st.cache_resource
