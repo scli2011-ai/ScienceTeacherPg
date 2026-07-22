@@ -99,8 +99,8 @@ def render_chat(supabase, gemini_client, chat_model_name, embedding_model_name):
         selected_lang_code = supported_languages[selected_lang_name]
 
         st.markdown("### 🔊 Audio Settings")
-        # Toggle for Text-to-Speech
-        st.toggle("Enable Text-to-Speech (TTS)", value=st.session_state.tts_enabled, key="tts_enabled")
+        # Toggle for Text-to-Speech (Removed the 'value=' argument to fix the warning)
+        st.toggle("Enable Text-to-Speech (TTS)", key="tts_enabled")
 
         st.markdown("---")
         
